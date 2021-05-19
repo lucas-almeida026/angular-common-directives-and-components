@@ -3,5 +3,8 @@
   "dest": "../../dist/acdnc",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "ng-resize-observer"
+  ]
 }
