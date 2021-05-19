@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button, input, select{
+  border: none;
+  outline-style: none;
+}
+
+button, input[type="submit"], select, a{
+  cursor: pointer;
+}
+
+a, a:visited, a:hover, a:active {
+  color: currentColor;
+  text-decoration: none;
+}
+
+ol, ul { list-style: none;}
+
+$st-color: #ffffff;
+$nd-color: #ffffff;
+$rd-color: #ffffff;
+
+$light: #f9f9f9;
+$dark: #2d2b2b;
+$white: #f0f0f0;
+$black: #141414;
+$gray: #c4c4c4;
+$gray2: #999;
+$gray3: #666;
+
+//-----
+
+@mixin circle($radius) {
+  width: $radius;
+  height: $radius;
+  border-radius: 50%;
+}
+
+@mixin flexRow($horizontal, $vertical) {
+  display: flex;
+  flex-direction: row;
+  justify-content: $horizontal;
+  align-items: $vertical;
+}
+
+@mixin flexColumn($horizontal, $vertical) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $vertical;
+  align-items: $horizontal;
+}

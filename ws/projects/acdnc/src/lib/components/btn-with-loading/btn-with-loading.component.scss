@@ -1,0 +1,66 @@
+@import './../styles.scss';
+
+.body{
+  width: auto;
+  min-width: 70px;
+  height: auto;
+  min-height: 1rem;
+  font-size: 1rem;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  .text{
+    @include flexColumn(center, center);
+    text-align: center;
+  }
+  .loadingWrapper{display: none}
+}
+
+.loadingWrapper{
+  @include flexColumn(center, center);
+  animation: loadingSvg 1s infinite;
+  svg circle{
+    stroke-dasharray: 50.3;
+    stroke-dashoffset: 50.3;
+    stroke-linecap: round;
+    animation: loadingCircle 4s ease infinite;
+  }
+}
+
+.btnLocked{
+  cursor: not-allowed;
+  &:hover{
+    opacity: 1;
+    box-shadow: none;
+  }
+}
+
+@keyframes loadingCircle {
+  0%, 100%{
+    stroke-dashoffset: 50.3;
+    stroke-width: 2;
+  }
+  50%{
+    stroke-dashoffset: 3;
+  }
+  50.1%{
+    stroke-dashoffset: 100.5;
+  }
+  0%{
+    stroke-width: 1;
+  }
+  50%{
+    stroke-width: 3;
+  }
+  100%{
+    stroke-width: 1;
+  }
+}
+
+@keyframes loadingSvg {
+  to{
+    transform: rotate(360deg);
+  }
+}

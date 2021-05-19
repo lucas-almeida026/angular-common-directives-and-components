@@ -1,0 +1,19 @@
+@mixin circle($radius) {
+  width: $radius;
+  height: $radius;
+  border-radius: 50%;
+}
+
+@mixin flexRow($horizontal, $vertical) {
+  display: flex;
+  flex-direction: row;
+  justify-content: $horizontal;
+  align-items: $vertical;
+}
+
+@mixin flexColumn($horizontal, $vertical) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $vertical;
+  align-items: $horizontal;
+}
