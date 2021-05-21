@@ -57,9 +57,10 @@
             "polyfills": "projects/acdnc-test/src/polyfills.ts",
             "tsConfig": "projects/acdnc-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
+            "assets": [              
               "projects/acdnc-test/src/favicon.ico",
-              "projects/acdnc-test/src/assets"
+              "projects/acdnc-test/src/assets",
+              "projects/acdnc-test/src/app"
             ],
             "styles": [
               "projects/acdnc-test/src/styles.scss"

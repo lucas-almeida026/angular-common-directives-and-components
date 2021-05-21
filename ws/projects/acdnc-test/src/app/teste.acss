@@ -1,0 +1,21 @@
+$body use:
+  backgroundColor: #f0f0f0
+  width: 800px
+  border: 2px solid black
+  .card use:
+    backgroundColor: orange
+    width: 60%  
+    @p use:
+      backgroundColor: blue
+  .wrapper use:
+    backgroundColor: green
+
+#asd use:
+  backgroundColor: green
+
+// .wrapper use:
+//   backgroundColor: green
+//   maxWidth: 100%
+
+// #btn use:
+//   backgroundColor: gray

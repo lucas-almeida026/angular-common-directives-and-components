@@ -1,14 +1,13 @@
-<div class="body">
+<div class="body" #body>
   Testing
-  <div class="wrapper" (click)="c($event)">
+  <div class="wrapper" (click)="c($event)" #wrapper>
     <div class="item" transferClickToParentElement></div>
   </div>
   <div class="card">
     <div class="img" autoHeight100Percent></div>
-    <div class="text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo distinctio atque commodi quam tenetur eveniet quos adipisci aspernatur voluptates repellat in aliquid corrupti veritatis culpa, placeat eum, debitis quibusdam illo?</div>
+    <div class="text" >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo distinctio atque commodi quam tenetur eveniet quos adipisci aspernatur voluptates repellat in aliquid corrupti veritatis culpa, placeat eum, debitis quibusdam illo?</div>
   </div>
   <div class="card">
-    <acdnc-btn-with-loading (click)="t()" value="Teste" [$loading]="$loading"></acdnc-btn-with-loading>
-    <!-- <t-bwl (click)="t()" value="Teste" [$loading]="$loading"></t-bwl> -->
+    <acdnc-btn-with-loading #btn (click)="t()" value="Teste" [$loading]="$loading"></acdnc-btn-with-loading>
   </div>
 </div>

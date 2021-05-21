@@ -1,0 +1,2 @@
+verificar existencia fe forEach em Ref e em Instruction de cada função
+verificar se ref é elementRef ou HTMLElement
