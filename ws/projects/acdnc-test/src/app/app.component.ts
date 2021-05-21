@@ -21,7 +21,6 @@ export class AppComponent implements AfterViewInit {
   ){}
 
   ngAfterViewInit(){
-    // this.ACSSCompilerService.setStyle(this, 'app/teste')
     this.acss2.setStyle(this, 'app/teste')
   }
 

@@ -14,54 +14,10 @@ export class acss2 {
     const instructions = this.interpretText(text)
     Object.entries(instructions).forEach((e, i) => {
       const dicItentifier = {
-        '$': (name: string, ref: any, instruction?: string[]) => {
-          if(!ref[name]) throw new Error('no name in ref')
-          if(instruction){
-            instruction.forEach(e => {
-              if(ref[name].nativeElement.style[e[0]] !== undefined) ref[name].nativeElement.style[e[0]] = e[1]
-            })
-          }
-          return ref[name].nativeElement
-        },
-        '.': (name: string, ref: any, instruction?: string[]) => {
-          let result: {[key: string]: any}[] = []
-          for(let i = 0; i < ref.children.length; i++){
-            if(!ref.children[i].classList) throw new Error(`${ref} is not a valid HTML element`)
-            if(!ref.children[i].classList.contains) throw new Error(`${ref} is not a valid HTML element`)
-            if(ref.children[i].classList.contains(name)) result.push(ref.children[i])
-          }
-          if(result === undefined) throw new Error(`No child with class name: "${name}" were found`)
-          if(instruction && result.length > 0){
-            instruction.forEach(e => {              
-              result.forEach(el => {
-                if(el.style[e[0]] !== undefined) el.style[e[0]] = e[1]
-              })
-            })
-          }
-          return result
-        },
-        '#': (name: string, ref: any, instruction?: string[]) => {
-          console.log(ref)
-        },
-        '@': (name: string, ref: any, instruction?: string[]) => {
-          let result: {[key: string]: any}[] = []
-          if(ref.forEach){
-            ref.forEach((e: any) => {
-              for(let i = 0; i < e.children.length; i++){
-                if(e.children[i].nodeName){
-                  if(e.children[i].nodeName.toLowerCase() == name){
-                    result.push(e.children[i])
-                    instruction?.forEach(p => {
-                      if(e.children[i].style[p[0]] !== undefined) e.children[i].style[p[0]] = p[1]
-                    })
-                  }
-                }
-              }
-            })
-          }else{
-            console.log('single:', ref)
-          }
-        }
+        '$': (name: string, ref: any, instruction?: string[]) => forViewChild(name, ref, instruction),
+        '.': (name: string, ref: any, instruction?: string[]) => forClass(name, ref, instruction),
+        '#': (name: string, ref: any, instruction?: string[]) => forId(name, ref, instruction),
+        '@': (name: string, ref: any, instruction?: string[]) => forHtmlTag(name, ref, instruction)
       }
       if(!e[0].includes('<')){
         const identifier = (<identifier>e[0].substring(0, 1))
@@ -104,12 +60,12 @@ export class acss2 {
     
     let scopeBranch: string[] = []
     lines.forEach((line, i, arr)=> {
-      if(line.includes(' use:')){
-        const head = line.substring(0, line.indexOf(' use:'))
+      if(line.includes(' set')){
+        const head = line.substring(0, line.indexOf(' set'))
         const diff = line.length - line.trim().length
         if(head.includes(' ')){
           if(diff % tabsize !== 0) throw new Error(`Scope error occurred due to tab error at line ${i+1}: "${line}"`)
-          scopeBranch[diff / tabsize] = line.substring(diff, line.indexOf(' use:'))
+          scopeBranch[diff / tabsize] = line.substring(diff, line.indexOf(' set'))
           if(diff / tabsize < scopeBranch.length - 1) scopeBranch = scopeBranch.slice(0, scopeBranch.length - 1)
         }else{
           scopeBranch = [head]
@@ -117,7 +73,7 @@ export class acss2 {
       }
       if(line.length == 0) scopeBranch = []
 
-      if(!line.includes(' use:')){
+      if(!line.includes(' set')){
         const diff = line.length - line.trim().length
         if((diff == 0 && line.length !== 0) || diff % tabsize !== 0) throw new Error(`Scope error occurred due to tab error at line ${i}: "${line}"`)
         if(diff !== 0 && line.length !== 0){
@@ -127,6 +83,7 @@ export class acss2 {
             if(selector.substring(0, 1).replace(/[@\.\$#]/g, '').length > 0) throw new Error(`Invalid selector "${selector.substring(0, 1)}" at line ${i}: ${arr[i - 1]}`)
             const instructions = line.split(':').map(e => e.trim())
             const key = scopeBranch.join('<')
+            if(key.split('<').length !== key.split('<').filter(e => e !== "").length) throw new Error(`tabulation error at line ${i}`)
             result[key] = result[key] === undefined ? [instructions] : [...result[key], instructions]
           }          
         }
@@ -134,5 +91,61 @@ export class acss2 {
     })
     return result
   }
+}
 
+function forViewChild(name: string, ref: any, instruction?: string[]): {[key: string]: any} {
+  if(!ref[name]) throw new Error(`there is no ${name} in the passed reference`)
+  if(instruction){
+    instruction.forEach(e => {
+      if(ref[name].nativeElement.style[e[0]] !== undefined) ref[name].nativeElement.style[e[0]] = e[1]
+    })
+  }
+  return ref[name].nativeElement
+}
+
+function forClass(name: string, ref: any, instruction?: string[]): {[key: string]: any} {
+  let result: {[key: string]: any}[] = []
+  if(ref.nativeElement) ref = ref.nativeElement
+  if(!ref.forEach) ref = [ref]
+  if(ref[0][name]) if(ref[0][name].nativeElement) return result
+  ref.forEach((e: any) => {
+    for(let i = 0; i < e.children.length; i++){
+      if(!e.children[i].classList) throw new Error(`${e} is not a valid HTML element`)
+      if(!e.children[i].classList.contains) throw new Error(`${e} is not a valid HTML element`)
+      if(e.children[i].classList.contains(name)) result.push(e.children[i])
+    }
+    // if(result[0] === undefined) throw new Error(`No child with class name: "${name}" were found`)
+    if(instruction && result.length > 0){
+      instruction.forEach(e => {              
+        result.forEach(el => {
+          if(el.style[e[0]] !== undefined) el.style[e[0]] = e[1]
+        })
+      })
+    }
+  })        
+  return result
+}
+
+function forId(name: string, ref: any, instruction?: string[]): {[key: string]: any} {
+  console.log(name)
+  return {}
+}
+
+function forHtmlTag(name: string, ref: any, instruction?: string[]): {[key: string]: any} {
+  let result: {[key: string]: any}[] = []
+  if(!ref.forEach) ref = [ref]
+  ref.forEach((e: any) => {
+    for(let i = 0; i < e.children.length; i++){
+      if(!e.children[i].nodeName) throw new Error(`${e} is not a valid HTML element`)
+      if(e.children[i].nodeName.toLowerCase() == name) result.push(e.children[i])
+    }
+    if(instruction && result.length > 0){
+      instruction.forEach(e => {              
+        result.forEach(el => {
+          if(el.style[e[0]] !== undefined) el.style[e[0]] = e[1]
+        })
+      })
+    }
+  })
+  return {}
 }
